@@ -2,6 +2,11 @@
     import { cart, total } from "../stores";
 	import CartItem from "./CartItem.svelte";
 
+    let cartbycategory = {}
+    $: cartbycategory = Object.values($cart).reduce((obj, product) => {
+        product.categoria in obj ? obj[product.categoria].push(product) : obj[product.categoria] = [product]
+        return obj
+    }, {})
 </script>
 
 <div class="itemslist">
@@ -10,8 +15,11 @@
             <h2>Sin Articulos</h2>
         </div>
     {/if}
-    {#each Object.values($cart) as item (item.id)}
-        <CartItem item={item} />
+    {#each Object.keys(cartbycategory) as categoria}
+        <p>{categoria}</p>
+        {#each cartbycategory[categoria] as item }
+            <CartItem {item}/>
+        {/each}
     {/each}
     <div class="checkout">
         <button>Ir a Pagar ${$total}</button>

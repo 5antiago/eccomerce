@@ -1,7 +1,13 @@
 import { writable } from 'svelte/store';
+import { browser } from "$app/environment";
+
 
 export function createCart() {
-	const { subscribe, set, update } = writable({});
+        let content
+	if(browser){
+		content = JSON.parse(localStorage.getItem('cart'));
+	}
+	const { subscribe, set, update } = writable(content || {});
 
 	return {
 		subscribe,
